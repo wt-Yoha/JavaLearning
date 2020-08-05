@@ -17,7 +17,8 @@ public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> 
     static class ServerHandler extends SimpleChannelInboundHandler<HttpObject> {
         @Override
         protected void channelRead0(ChannelHandlerContext channelHandlerContext, HttpObject httpObject) throws Exception {
-            if (httpObject instanceof HttpRequest httpRequest) {
+            if (httpObject instanceof HttpRequest) {
+                HttpRequest httpRequest = (HttpRequest) httpObject;
                 System.out.println("pipeline hashcode = " + channelHandlerContext.pipeline().hashCode() + " httpServerHandler hash = " +
                         this.hashCode());
                 System.out.println("msg type = " + httpObject.getClass());
