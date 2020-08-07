@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_package = "NettyLearning.protobuf2";
+option java_outer_classname = "ProtoClass";
+
+message Message{
+  enum DataType {
+    STUDENT = 0;
+    TEACHER = 1;
+  }
+
+  // 用于标识携带的数据类型
+  DataType dataType = 1;
+
+  oneof data {
+    Student student = 2;
+    Teacher teacher = 3;
+  }
+}
+
+message Student{
+  int32 id = 1;
+  string name = 2;
+  double grade = 3;
+}
+
+message Teacher{
+  string name = 1;
+  string dept = 2;
+  string class = 3;
+}

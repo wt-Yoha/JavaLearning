@@ -5,8 +5,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.string.StringDecoder;
 
 public class Client {
 
@@ -44,7 +44,8 @@ public class Client {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline pipeline = socketChannel.pipeline();
                         pipeline.addLast(new ProtobufEncoder());
-                        pipeline.addLast(new ProtobufDecoder(ProjectProto.Student.getDefaultInstance()));
+//                        pipeline.addLast(new ProtobufDecoder(ProjectProto.Student.getDefaultInstance()));
+                        pipeline.addLast(new StringDecoder());
                         pipeline.addLast(new ClientHandler());
                     }
                 });

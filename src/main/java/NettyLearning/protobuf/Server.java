@@ -1,16 +1,12 @@
 package NettyLearning.protobuf;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.TextFormat;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
-import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.string.StringEncoder;
-import io.netty.util.CharsetUtil;
 
 public class Server {
     public static class ServerHandler extends SimpleChannelInboundHandler<ProjectProto.Student> {
@@ -18,7 +14,8 @@ public class Server {
         protected void channelRead0(ChannelHandlerContext channelHandlerContext, ProjectProto.Student student) throws Exception {
             System.out.println("Copy client msg.");
             System.out.println(student);
-            channelHandlerContext.writeAndFlush(student);
+//            channelHandlerContext.writeAndFlush(student);
+            channelHandlerContext.writeAndFlush("Hello Client");
         }
     }
     public void run(){
@@ -35,7 +32,8 @@ public class Server {
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             // add an protoStudent class decoder
                             pipeline.addLast(new ProtobufDecoder(ProjectProto.Student.getDefaultInstance()));
-                            pipeline.addLast(new ProtobufEncoder());
+//                            pipeline.addLast(new ProtobufEncoder());
+                            pipeline.addLast(new StringEncoder());
                             pipeline.addLast(new ServerHandler());
                         }
                     });
