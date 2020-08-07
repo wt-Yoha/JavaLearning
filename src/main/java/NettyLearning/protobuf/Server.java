@@ -1,17 +1,24 @@
 package NettyLearning.protobuf;
 
+import com.google.protobuf.ByteString;
+import com.google.protobuf.TextFormat;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 
 public class Server {
     public static class ServerHandler extends SimpleChannelInboundHandler<ProjectProto.Student> {
         @Override
         protected void channelRead0(ChannelHandlerContext channelHandlerContext, ProjectProto.Student student) throws Exception {
-            channelHandlerContext.writeAndFlush(student.toString());
+            System.out.println("Copy client msg.");
+            System.out.println(student);
+            channelHandlerContext.writeAndFlush(student);
         }
     }
     public void run(){
@@ -22,16 +29,18 @@ public class Server {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(boss, worker)
                     .channel(NioServerSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             // add an protoStudent class decoder
                             pipeline.addLast(new ProtobufDecoder(ProjectProto.Student.getDefaultInstance()));
+                            pipeline.addLast(new ProtobufEncoder());
                             pipeline.addLast(new ServerHandler());
                         }
                     });
             ChannelFuture sync = serverBootstrap.bind(9968).sync();
+            System.out.println("Server start...");
             sync.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();

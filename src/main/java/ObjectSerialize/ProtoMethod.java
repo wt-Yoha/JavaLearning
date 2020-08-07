@@ -13,7 +13,7 @@ public class ProtoMethod {
     public void test() throws IOException {
         AddressProtos.Person john = AddressProtos.Person.newBuilder()
                 .setId(123)
-                .setName("John Doe")
+                .setName("老王")
                 .setEmail("joe@gmail.com")
                 .addPhones(
                         AddressProtos.Person.PhoneNumber.newBuilder()
